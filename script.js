@@ -74,7 +74,17 @@ function renderSequence(name) {
   selectFrame(0);
 }
 
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => renderSequence(tab.dataset.sequence));
+document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => renderSequence(tab.dataset.sequence)));
+document.querySelector('#previous').addEventListener('click', () => { stopPlayback(); selectFrame(currentFrame - 1); });
+document.querySelector('#next').addEventListener('click', () => { stopPlayback(); selectFrame(currentFrame + 1); });
+playButton.addEventListener('click', () => {
+  if (playbackTimer) { stopPlayback(); return; }
+  selectFrame(0);
+  playButton.innerHTML = 'Pause sequence <span>Ⅱ</span>';
+  playButton.setAttribute('aria-pressed', 'true');
+  playbackTimer = setInterval(() => {
+    if (currentFrame === 2) { stopPlayback(); return; }
+    selectFrame(currentFrame + 1);
+  }, 2200);
 });
 renderSequence(currentSequence);
